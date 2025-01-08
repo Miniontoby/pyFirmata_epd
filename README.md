@@ -99,4 +99,4 @@ The paint should look like:
 ![democode result](./democode_result.png)
 
 
-Extra API documentation can be found on the [ReadTheDocs](https://pyfirmata_epd.readthedocs.io/en/latest/) documentation.
+Extra API documentation can be found on the [ReadTheDocs](https://pyfirmata-epd.readthedocs.io/en/latest/) documentation.
