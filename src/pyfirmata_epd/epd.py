@@ -10,14 +10,15 @@ except:
 MAX_DATA_BYTES, SERIAL_MESSAGE = 64, 0x60
 
 class Epd: # E Paper Display
+    """
+    ePaper Display class
+    
+    :param Board board: Arduino Board
+    """
     _current_state = 0
     _last = False
 
     def __init__(self, board):
-        """
-        :arg board: Arduino Board
-        :type board: Board
-        """
         self._board = board
         self._board.add_cmd_handler(STRING_DATA, self._dataReceiver)
         
@@ -40,10 +41,8 @@ class Epd: # E Paper Display
     def DisplayFrame(self, black_image, red_image = None):
         """Send the image data to the ePaper-display to be shown
 
-        :arg black_image: Black image data
-        :type black_image: list[int]
-        :arg red_image: Red image data (Optional)
-        :type red_image: list[int]|None
+        :param list[int] black_image: Black image data
+        :param list[int]|None red_image: Red image data (Optional)
         """
         self._current_state = 1 # Sending...
 

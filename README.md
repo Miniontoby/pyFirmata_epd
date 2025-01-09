@@ -4,6 +4,8 @@ A library to create and send image data to an ePaper display connected to a firm
 
 Supports both pyFirmata and pyFirmata2 libraries!
 
+Library supports Python 3.0+ and should (according to `vermin`) also support Python 2.3+
+
 
 ## Info
 
@@ -24,7 +26,8 @@ See [code_pieces_for_ino.md](code_pieces_for_ino.md) for the changes you need to
 
 
 After that install either `pyFirmata2` OR `pyFirmata` library using pip.
-And then install this library as well.
+
+Then you can install this library using `pip install pyfirmata-epd`
 
 
 ## API/Example

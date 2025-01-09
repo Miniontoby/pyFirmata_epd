@@ -29,17 +29,19 @@ def fixY(y, paint):
 
 
 class Paint:
+    """
+    Initialize a paint class
+    
+    :param list[int] image: Default image buffer. Can be empty
+    :param int width: Width of paint screen (should be multiple of 8)
+    :param int height: Height of paint screen
+    """
     _image = []
     _width = 0
     _height = 0
     _rotate = ROTATE_0
 
-    def __init__(self, image: list[int], width: int, height: int):
-        """
-        :arg image: Default image buffer
-        :arg width: Width of paint screen (should be multiple of 8)
-        :arg height: Height of paint screen
-        """
+    def __init__(self, image, width, height):
         self._image = image
         # 1 byte = 8 pixels, so the width should be the multiple of 8
         self._width = width + 8 - (width % 8) if width % 8 else width
@@ -47,16 +49,23 @@ class Paint:
         for i in range(len(self._image), floor(self._width / 8) * self._height):
             self._image.append(255)
 
-    def Clear(self, colored: int):
-        """clear the image"""
+    def Clear(self, colored):
+        """clear the image
+        
+        :param int colored: Should the pixels be colored or not
+        """
         for x in range(self._width):
             for y in range(self._height):
                 self.DrawAbsolutePixel(x, y, colored)
 
-    def DrawAbsolutePixel(self, x: int, y: int, colored: int):
+    def DrawAbsolutePixel(self, x, y, colored):
         """this draws a pixel by absolute coordinates.
         this function won't be affected by the rotate parameter.
-    """
+
+        :param int x: X Location
+        :param int y: Y Location
+        :param int colored: Should the pixel be colored or not
+        """
         if x < 0 or x >= self._width or y < 0 or y >= self._height: return
         location = floor((x + y * self._width) / 8)
     
@@ -71,29 +80,62 @@ class Paint:
             self._image[location] |= 0x80 >> (x % 8)
 
     # Getters and Setters
-    def GetImage(self) -> list[int]:
+    def GetImage(self):
+        """Get the image object
+
+        :rtype: list[int]
+        """
         return self._image
 
-    def GetWidth(self) -> int:
+    def GetWidth(self):
+        """Get the width
+
+        :rtype: int
+        """
         return self._width
 
-    def SetWidth(self, width: int):
+    def SetWidth(self, width):
+        """Set the width
+
+        :param int width: New width value. Should be multiple of 8
+        """
         self._width = width + 8 - (width % 8) if width % 8 else width
 
-    def GetHeight(self) -> int:
+    def GetHeight(self):
+        """Get the height
+
+        :rtype: int
+        """
         return self._height
 
-    def SetHeight(self, height: int):
+    def SetHeight(self, height):
+        """Set the height
+
+        :param int height: New height value
+        """
         self._height = height
 
-    def GetRotate(self) -> int:
+    def GetRotate(self):
+        """Get the rotation
+
+        :rtype: int
+        """
         return self._rotate
 
-    def SetRotate(self, rotate: int):
+    def SetRotate(self, rotate):
+        """Set the rotation
+
+        :param int rotate: New rotate value
+        """
         self._rotate = rotate
 
-    def DrawPixel(self, x: int, y: int, colored: int):
-        """this draws a pixel by the coordinates"""
+    def DrawPixel(self, x, y, colored):
+        """this draws a pixel by the coordinates
+
+        :param int x: X Location
+        :param int y: Y Location
+        :param int colored: Should the pixel be colored or not
+        """
         if self._rotate == ROTATE_0:
             if x < 0 or x >= self._width or y < 0 or y >= self._height:
                 return
@@ -118,8 +160,15 @@ class Paint:
             return
         self.DrawAbsolutePixel(x, y, colored)
 
-    def DrawCharAt(self, x: int, y: int, ascii_char: chr, font: sFONT, colored: int):
-        """this draws a charactor on the frame buffer but not refresh"""
+    def DrawCharAt(self, x, y, ascii_char, font, colored):
+        """this draws a charactor on the frame buffer but not refresh
+
+        :param int x: X Location
+        :param int y: Y Location
+        :param chr ascii_char: ASCII char
+        :param sFONT font: Font for the char
+        :param int colored: Should the pixels be colored or not
+        """
         char_offset = floor((ord(ascii_char) - ord(' ')) * font.Height * floor(font.Width / 8 + (1 if font.Width % 8 else 0)))
         ptr = font.table[char_offset]
 
@@ -134,8 +183,15 @@ class Paint:
                 char_offset += 1
                 ptr = font.table[char_offset]
 
-    def DrawStringAt(self, x: int, y: int, text: str, font: sFONT, colored: int):
-        """this displays a string on the frame buffer but not refresh"""
+    def DrawStringAt(self, x, y, text, font, colored):
+        """this displays a string on the frame buffer but not refresh
+
+        :param int x: X Location
+        :param int y: Y Location
+        :param str text: The whole string
+        :param sFONT font: Font for the text
+        :param int colored: Should the pixels be colored or not
+        """
         x = fixX(x, self)
         y = fixY(y, self)
 
@@ -153,8 +209,15 @@ class Paint:
             p_text += 1
             counter += 1
 
-    def DrawLine(self, x0: int, y0: int, x1: int, y1: int, colored: int):
-        """this draws a line on the frame buffer"""
+    def DrawLine(self, x0, y0, x1, y1, colored):
+        """this draws a line on the frame buffer
+
+        :param int x0: Start X Location
+        :param int y0: Start Y Location
+        :param int x1: End X Location
+        :param int y1: End Y Location
+        :param int colored: Should the pixels be colored or not
+        """
         # Bresenham algorithm
         dx = x1 - x0 if x1 - x0 >= 0 else x0 - x1
         sx = 1 if x0 < x1 else -1
@@ -171,18 +234,37 @@ class Paint:
                 err += dx;
                 y0 += sy;
 
-    def DrawHorizontalLine(self, x: int, y: int, line_width: int, colored: int):
-        """this draws a horizontal line on the frame buffer"""
+    def DrawHorizontalLine(self, x, y, line_width, colored):
+        """this draws a horizontal line on the frame buffer
+
+        :param int x: X Location
+        :param int y: Y Location
+        :param int line_width: Line width
+        :param int colored: Should the pixels be colored or not
+        """
         for i in range(x, round(x + line_width)):
             self.DrawPixel(i, y, colored)
 
-    def DrawVerticalLine(self, x: int, y: int, line_height: int, colored: int):
-        """this draws a vertical line on the frame buffer"""
+    def DrawVerticalLine(self, x, y, line_height, colored):
+        """this draws a vertical line on the frame buffer
+
+        :param int x: X Location
+        :param int y: Y Location
+        :param int line_height: Line height
+        :param int colored: Should the pixels be colored or not
+        """
         for i in range(y, round(y + line_height)):
             self.DrawPixel(x, i, colored)
         
-    def DrawRectangle(self, x0: int, y0: int, x1: int, y1: int, colored: int):
-        """this draws a rectangle"""
+    def DrawRectangle(self, x0, y0, x1, y1, colored):
+        """this draws a rectangle
+
+        :param int x0: Start X Location
+        :param int y0: Start Y Location
+        :param int x1: End X Location
+        :param int y1: End Y Location
+        :param int colored: Should the pixels be colored or not
+        """
         x0 = fixX(x0, self)
         x1 = fixX(x1, self)
         y0 = fixY(y0, self)
@@ -198,8 +280,15 @@ class Paint:
         self.DrawVerticalLine(min_x, min_y, max_y - min_y + 1, colored)
         self.DrawVerticalLine(max_x, min_y, max_y - min_y + 1, colored)
 
-    def DrawFilledRectangle(self, x0: int, y0: int, x1: int, y1: int, colored: int):
-        """this draws a rectangle"""
+    def DrawFilledRectangle(self, x0, y0, x1, y1, colored):
+        """this draws a filled rectangle
+
+        :param int x0: Start X Location
+        :param int y0: Start Y Location
+        :param int x1: End X Location
+        :param int y1: End Y Location
+        :param int colored: Should the pixels be colored or not
+        """
         x0 = fixX(x0, self)
         x1 = fixX(x1, self)
         y0 = fixY(y0, self)
@@ -213,8 +302,14 @@ class Paint:
         for i in range(min_x, max_x + 1): # <= max_x
             self.DrawVerticalLine(i, min_y, max_y - min_y + 1, colored)
 
-    def DrawCircle(self, x: int, y: int, radius: int, colored: int):
-        """this draws a circle"""
+    def DrawCircle(self, x, y, radius, colored):
+        """this draws a circle
+
+        :param int x: Middle X Location
+        :param int y: Middle Y Location
+        :param int radius: Radius of the circle
+        :param int colored: Should the pixels be colored or not
+        """
         # Bresenham algorithm
         x_pos = -radius
         y_pos = 0
@@ -238,8 +333,14 @@ class Paint:
                 x_pos += 1
                 err += x_pos * 2 + 1
 
-    def DrawFilledCircle(self, x: int, y: int, radius: int, colored: int):
-        """this draws a filled circle"""
+    def DrawFilledCircle(self, x, y, radius, colored):
+        """this draws a filled circle
+
+        :param int x: Middle X Location
+        :param int y: Middle Y Location
+        :param int radius: Radius of the circle
+        :param int colored: Should the pixels be colored or not
+        """
         # Bresenham algorithm
         x_pos = -radius
         y_pos = 0

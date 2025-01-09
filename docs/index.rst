@@ -18,7 +18,7 @@ Supports both pyFirmata and pyFirmata2!
    :caption: Links:
 
    Source <https://github.com/Miniontoby/pyFirmata_epd>
-   Project on PyPi <https://pypi.org/project/pyFirmata_epd/>
+   Project on PyPi <https://pypi.org/project/pyFirmata-epd/>
 
 Indices and tables
 ==================
